@@ -3,6 +3,7 @@ export const ROLES = {
   MANAGER: "MANAGER",
   TRAINER: "TRAINER",
   RECEPTION: "RECEPTION",
+  MEMBER: "MEMBER",
 };
 
 export const ALL_ROLES = Object.values(ROLES);

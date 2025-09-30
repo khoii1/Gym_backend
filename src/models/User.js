@@ -23,7 +23,7 @@ const UserSchema = new mongoose.Schema(
       maxlength: 150,
     },
     passwordHash: { type: String, required: true },
-    role: { type: String, enum: ALL_ROLES, default: ROLES.RECEPTION },
+    role: { type: String, enum: ALL_ROLES, default: ROLES.MEMBER },
     isEmailVerified: { type: Boolean, default: false },
     codes: [VerificationCodeSchema],
   },
