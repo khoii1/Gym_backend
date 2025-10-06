@@ -13,12 +13,28 @@ const AttendanceSchema = new mongoose.Schema(
       required: true,
     },
     checkin_time: { type: Date, required: true },
+    checkout_time: { type: Date },
+    workout_duration: { type: Number }, // minutes
+    status: {
+      type: String,
+      enum: ["checked_in", "completed", "cancelled"],
+      default: "checked_in",
+    },
     note: { type: String },
+
+    // Additional tracking
+    check_in_method: {
+      type: String,
+      enum: ["manual", "qr_code", "card", "mobile_app"],
+      default: "manual",
+    },
   },
   { timestamps: true }
 );
 
-// một hội viên không được trùng thời điểm check-in
-AttendanceSchema.index({ member_id: 1, checkin_time: 1 }, { unique: true });
+// Indexes for better query performance
+AttendanceSchema.index({ member_id: 1, checkin_time: -1 });
+AttendanceSchema.index({ checkin_time: 1 });
+AttendanceSchema.index({ status: 1 });
 
 export default mongoose.model("Attendance", AttendanceSchema);

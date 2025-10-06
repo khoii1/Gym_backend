@@ -5,6 +5,9 @@ import { ROLES } from "../constants/roles.js";
 import {
   createRegistration,
   listRegistrations,
+  getRegistrationById,
+  updateRegistrationStatus,
+  getMemberActivePackages,
 } from "../controllers/registration.controller.js";
 
 const router = Router();
@@ -21,6 +24,24 @@ router.post(
   "/",
   requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.RECEPTION),
   createRegistration
+);
+
+router.get(
+  "/:id",
+  requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.RECEPTION),
+  getRegistrationById
+);
+
+router.put(
+  "/:id/status",
+  requireRole(ROLES.ADMIN, ROLES.MANAGER),
+  updateRegistrationStatus
+);
+
+router.get(
+  "/member/:memberId/active",
+  requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.RECEPTION, ROLES.TRAINER),
+  getMemberActivePackages
 );
 
 export default router;

@@ -134,6 +134,28 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"code\": \"123456\",\n  \"newPassword\": \"NewPassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/reset-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "reset-password"]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -156,7 +178,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"fullName\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"phone\": \"0987654321\",\n  \"dateOfBirth\": \"1990-01-15\",\n  \"gender\": \"male\",\n  \"address\": \"123 Main St\"\n}"
+              "raw": "{\n  \"fullName\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"phone\": \"0987654321\",\n  \"dateOfBirth\": \"1990-01-15\",\n  \"gender\": \"male\",\n  \"address\": \"123 Main St\",\n  \"emergencyContact\": {\n    \"name\": \"Jane Doe\",\n    \"phone\": \"0123456789\",\n    \"relationship\": \"Spouse\"\n  },\n  \"notes\": \"Prefers morning workouts\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/members",
@@ -183,6 +205,150 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Search Members",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/members?search=john&status=active&limit=10&page=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "members"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "john",
+                  "description": "Search by name, email, or membership number"
+                },
+                {
+                  "key": "status",
+                  "value": "active",
+                  "description": "Filter by status: active, inactive, suspended, cancelled"
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Number of results per page"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Member by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/members/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "members", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "member_id_here"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Member",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"John Smith\",\n  \"phone\": \"0987654322\",\n  \"address\": \"456 New Street\",\n  \"status\": \"active\",\n  \"notes\": \"Updated contact information\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/members/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "members", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "member_id_here"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Member",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/members/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "members", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "member_id_here"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Member Statistics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/members/:id/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "members", ":id", "stats"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "member_id_here"
+                }
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -205,7 +371,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Basic Gym Package\",\n  \"description\": \"Basic gym access for 1 month\",\n  \"duration\": 30,\n  \"price\": 500000,\n  \"features\": [\"Gym access\", \"Basic equipment\"]\n}"
+              "raw": "{\n  \"name\": \"Basic Gym Package\",\n  \"description\": \"Basic gym access for 1 month\",\n  \"duration\": 30,\n  \"price\": 500000,\n  \"features\": [\"Gym access\", \"Basic equipment\"],\n  \"maxSessions\": 30\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/packages",
@@ -229,6 +395,782 @@
               "raw": "{{baseUrl}}/api/packages",
               "host": ["{{baseUrl}}"],
               "path": ["api", "packages"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Package by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/packages/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "packages", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "package_id_here"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Package",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Premium Gym Package\",\n  \"description\": \"Premium gym access with personal trainer\",\n  \"duration\": 30,\n  \"price\": 800000,\n  \"features\": [\"Gym access\", \"Personal trainer\", \"Nutrition plan\"],\n  \"maxSessions\": 25\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/packages/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "packages", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "package_id_here"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Package",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/packages/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "packages", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "package_id_here"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Discounts",
+      "item": [
+        {
+          "name": "Create Discount",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New Member Discount\",\n  \"description\": \"20% off for new members\",\n  \"type\": \"percentage\",\n  \"value\": 20,\n  \"startDate\": \"2025-01-01\",\n  \"endDate\": \"2025-12-31\",\n  \"applicablePackages\": [],\n  \"minPurchaseAmount\": 300000\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/discounts",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "discounts"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Discounts",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/discounts",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "discounts"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Active Discounts",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/discounts/active",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "discounts", "active"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Discount by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/discounts/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "discounts", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "discount_id_here"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Discount",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated New Member Discount\",\n  \"description\": \"25% off for new members - Updated\",\n  \"type\": \"percentage\",\n  \"value\": 25,\n  \"startDate\": \"2025-01-01\",\n  \"endDate\": \"2025-12-31\",\n  \"status\": \"active\",\n  \"minPurchaseAmount\": 250000\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/discounts/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "discounts", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "discount_id_here"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Discount",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/discounts/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "discounts", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "discount_id_here"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Package Registration",
+      "item": [
+        {
+          "name": "Register Package",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"memberId\": \"member_id_here\",\n  \"packageId\": \"package_id_here\",\n  \"discountId\": \"discount_id_here\",\n  \"notes\": \"Member wants to start immediately\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/registrations",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "registrations"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Registrations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/registrations",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "registrations"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Registration by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/registrations/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "registrations", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "registration_id_here"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Member Registrations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/registrations/member/:memberId",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "registrations", "member", ":memberId"],
+              "variable": [
+                {
+                  "key": "memberId",
+                  "value": "member_id_here"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Registration Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"confirmed\",\n  \"notes\": \"Payment received and confirmed\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/registrations/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "registrations", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "registration_id_here"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Attendance",
+      "item": [
+        {
+          "name": "Check In",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"memberId\": \"member_id_here\",\n  \"notes\": \"Member checked in for workout\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/attendance/checkin",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "attendance", "checkin"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Check Out",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"memberId\": \"member_id_here\",\n  \"notes\": \"Completed workout session\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/attendance/checkout",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "attendance", "checkout"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Today's Attendance",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/attendance/today",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "attendance", "today"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Member Attendance History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/attendance/member/:memberId",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "attendance", "member", ":memberId"],
+              "variable": [
+                {
+                  "key": "memberId",
+                  "value": "member_id_here"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Attendance Overview",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/attendance/overview",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "attendance", "overview"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Employees",
+      "item": [
+        {
+          "name": "Create Employee",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Jane Smith\",\n  \"email\": \"jane@gym.com\",\n  \"phone\": \"0123456789\",\n  \"position\": \"Trainer\",\n  \"department\": \"Fitness\",\n  \"salary\": 15000000,\n  \"hireDate\": \"2025-01-01\",\n  \"qualifications\": [\"Certified Personal Trainer\", \"Nutrition Specialist\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/employees",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "employees"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Employees",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/employees",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "employees"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Employee by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/employees/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "employees", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "employee_id_here"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search Employees",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/employees?search=jane&position=Trainer&status=active&limit=10&page=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "employees"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "jane",
+                  "description": "Search by name, email, or position"
+                },
+                {
+                  "key": "position",
+                  "value": "Trainer",
+                  "description": "Filter by position"
+                },
+                {
+                  "key": "status",
+                  "value": "active",
+                  "description": "Filter by status: active, inactive, terminated"
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Number of results per page"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Employee",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Jane Smith Updated\",\n  \"phone\": \"0123456790\",\n  \"position\": \"Senior Trainer\",\n  \"salary\": 18000000,\n  \"status\": \"active\",\n  \"notes\": \"Promoted to senior trainer\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/employees/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "employees", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "employee_id_here"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Employee",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/employees/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "employees", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "employee_id_here"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Work Schedule",
+      "item": [
+        {
+          "name": "Create Work Schedule",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"employeeId\": \"employee_id_here\",\n  \"date\": \"2025-10-01\",\n  \"startTime\": \"08:00\",\n  \"endTime\": \"17:00\",\n  \"shiftType\": \"morning\",\n  \"notes\": \"Regular morning shift\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/work-schedules",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "work-schedules"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Work Schedules",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/work-schedules",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "work-schedules"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Work Schedule by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/work-schedules/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "work-schedules", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "schedule_id_here"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Work Schedule",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"date\": \"2025-10-01\",\n  \"startTime\": \"09:00\",\n  \"endTime\": \"18:00\",\n  \"shiftType\": \"full-day\",\n  \"status\": \"scheduled\",\n  \"notes\": \"Updated to full day shift\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/work-schedules/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "work-schedules", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "schedule_id_here"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Work Schedule",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/work-schedules/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "work-schedules", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "schedule_id_here"
+                }
+              ]
             }
           },
           "response": []

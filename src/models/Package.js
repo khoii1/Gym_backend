@@ -2,19 +2,51 @@ import mongoose from "mongoose";
 
 const PackageSchema = new mongoose.Schema(
   {
-    code: {
+    name: {
       type: String,
       required: true,
-      unique: true,
-      maxlength: 50,
+      maxlength: 150,
       trim: true,
     },
-    name: { type: String, required: true, maxlength: 150 },
-    duration_days: { type: Number, required: true, min: 1 },
-    max_sessions: { type: Number, min: 1 }, // có thể để trống
-    discount_id: { type: mongoose.Schema.Types.ObjectId, ref: "Discount" }, // tối đa 1 discount
+    description: {
+      type: String,
+      maxlength: 500,
+    },
+    duration: {
+      type: Number,
+      required: true,
+      min: 1,
+      comment: "Duration in days",
+    },
+    price: {
+      type: Number,
+      required: true,
+      min: 0,
+      comment: "Price in VND",
+    },
+    features: [
+      {
+        type: String,
+        maxlength: 100,
+      },
+    ],
+    status: {
+      type: String,
+      enum: ["active", "inactive", "discontinued"],
+      default: "active",
+    },
+    maxSessions: {
+      type: Number,
+      min: 1,
+      comment: "Maximum number of sessions allowed (optional)",
+    },
   },
   { timestamps: true }
 );
+
+// Indexes for better performance
+PackageSchema.index({ name: 1 });
+PackageSchema.index({ status: 1 });
+PackageSchema.index({ price: 1 });
 
 export default mongoose.model("Package", PackageSchema);

@@ -22,8 +22,10 @@ router.post(
   "/",
   [
     requireRole(ROLES.ADMIN, ROLES.MANAGER),
-    body("full_name").notEmpty(),
-    body("role").notEmpty(),
+    body("fullName").notEmpty().withMessage("Full name is required"),
+    body("email").isEmail().withMessage("Valid email is required"),
+    body("phone").notEmpty().withMessage("Phone is required"),
+    body("position").notEmpty().withMessage("Position is required"),
   ],
   runValidations,
   createEmployee

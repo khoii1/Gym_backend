@@ -138,7 +138,6 @@ export async function forgotPassword(req, res) {
       "[forgotPassword] Gửi email đặt lại mật khẩu thất bại:",
       err?.message || err
     );
-    // Vẫn trả về thông báo chung để tránh lộ thông tin user
   }
 
   return res.json({

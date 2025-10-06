@@ -35,7 +35,7 @@ if (!process.env.SENDGRID_API_KEY) {
       console.log("📧 SMTP đã sẵn sàng (verify OK)");
     } catch (err) {
       console.warn(
-        "⚠️ Không thể kết nối SMTP, vui lòng kiểm tra MAIL_HOST/PORT/SECURE/USER/PASS:",
+        "Không thể kết nối SMTP, vui lòng kiểm tra MAIL_HOST/PORT/SECURE/USER/PASS:",
         err?.message || err
       );
     }
