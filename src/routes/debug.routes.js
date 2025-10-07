@@ -40,7 +40,7 @@ router.get("/user-codes/:email", async (req, res) => {
   try {
     const user = await User.findOne({ email: req.params.email });
     if (!user) {
-      return res.status(404).json({ message: "User không tồn tại" });
+      return res.status(404).json({ message: "Người dùng không tồn tại" });
     }
 
     const activeCodes = user.codes.filter(

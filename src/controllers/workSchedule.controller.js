@@ -8,7 +8,7 @@ export async function createWorkSchedule(req, res) {
     if (!employee) {
       return res.status(404).json({
         success: false,
-        message: "Employee not found",
+        message: "Không tìm thấy nhân viên này",
       });
     }
 
@@ -19,13 +19,13 @@ export async function createWorkSchedule(req, res) {
 
     return res.status(201).json({
       success: true,
-      message: "Work schedule created successfully",
+      message: "Tạo lịch làm việc thành công",
       data: populatedSchedule,
     });
   } catch (error) {
     return res.status(400).json({
       success: false,
-      message: "Failed to create work schedule",
+      message: "Không thể tạo lịch làm việc. Vui lòng kiểm tra lại thông tin",
       error: error.message,
     });
   }
@@ -76,7 +76,7 @@ export async function listWorkSchedules(req, res) {
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "Failed to fetch work schedules",
+      message: "Có lỗi xảy ra khi tải danh sách lịch làm việc",
       error: error.message,
     });
   }
@@ -92,7 +92,7 @@ export async function getWorkScheduleById(req, res) {
     if (!schedule) {
       return res.status(404).json({
         success: false,
-        message: "Work schedule not found",
+        message: "Không tìm thấy lịch làm việc này",
       });
     }
 
@@ -103,7 +103,7 @@ export async function getWorkScheduleById(req, res) {
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "Failed to fetch work schedule",
+      message: "Có lỗi xảy ra khi tải thông tin lịch làm việc",
       error: error.message,
     });
   }
@@ -120,19 +120,19 @@ export async function updateWorkSchedule(req, res) {
     if (!schedule) {
       return res.status(404).json({
         success: false,
-        message: "Work schedule not found",
+        message: "Không tìm thấy lịch làm việc này",
       });
     }
 
     return res.json({
       success: true,
-      message: "Work schedule updated successfully",
+      message: "Cập nhật lịch làm việc thành công",
       data: schedule,
     });
   } catch (error) {
     return res.status(400).json({
       success: false,
-      message: "Failed to update work schedule",
+      message: "Có lỗi xảy ra khi cập nhật lịch làm việc",
       error: error.message,
     });
   }
@@ -145,18 +145,18 @@ export async function deleteWorkSchedule(req, res) {
     if (!schedule) {
       return res.status(404).json({
         success: false,
-        message: "Work schedule not found",
+        message: "Không tìm thấy lịch làm việc này",
       });
     }
 
     return res.json({
       success: true,
-      message: "Work schedule deleted successfully",
+      message: "Xóa lịch làm việc thành công",
     });
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "Failed to delete work schedule",
+      message: "Có lỗi xảy ra khi xóa lịch làm việc",
       error: error.message,
     });
   }

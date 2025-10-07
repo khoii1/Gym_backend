@@ -5,13 +5,13 @@ export async function createPackage(req, res) {
     const packageData = await Package.create(req.body);
     return res.status(201).json({
       success: true,
-      message: "Package created successfully",
+      message: "Tạo gói tập thành công",
       data: packageData,
     });
   } catch (error) {
     return res.status(400).json({
       success: false,
-      message: "Failed to create package",
+      message: "Không thể tạo gói tập. Vui lòng kiểm tra lại thông tin",
       error: error.message,
     });
   }
@@ -49,7 +49,7 @@ export async function listPackages(req, res) {
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "Failed to fetch packages",
+      message: "Có lỗi xảy ra khi tải danh sách gói tập",
       error: error.message,
     });
   }
@@ -62,7 +62,7 @@ export async function getPackageById(req, res) {
     if (!packageData) {
       return res.status(404).json({
         success: false,
-        message: "Package not found",
+        message: "Không tìm thấy gói tập này",
       });
     }
 
@@ -73,7 +73,7 @@ export async function getPackageById(req, res) {
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "Failed to fetch package",
+      message: "Có lỗi xảy ra khi tải thông tin gói tập",
       error: error.message,
     });
   }
@@ -90,19 +90,19 @@ export async function updatePackage(req, res) {
     if (!packageData) {
       return res.status(404).json({
         success: false,
-        message: "Package not found",
+        message: "Không tìm thấy gói tập này",
       });
     }
 
     return res.json({
       success: true,
-      message: "Package updated successfully",
+      message: "Cập nhật gói tập thành công",
       data: packageData,
     });
   } catch (error) {
     return res.status(400).json({
       success: false,
-      message: "Failed to update package",
+      message: "Không thể cập nhật gói tập. Vui lòng kiểm tra lại thông tin",
       error: error.message,
     });
   }
@@ -115,18 +115,18 @@ export async function deletePackage(req, res) {
     if (!packageData) {
       return res.status(404).json({
         success: false,
-        message: "Package not found",
+        message: "Không tìm thấy gói tập này",
       });
     }
 
     return res.json({
       success: true,
-      message: "Package deleted successfully",
+      message: "Xóa gói tập thành công",
     });
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "Failed to delete package",
+      message: "Có lỗi xảy ra khi xóa gói tập",
       error: error.message,
     });
   }

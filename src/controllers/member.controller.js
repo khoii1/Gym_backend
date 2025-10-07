@@ -34,12 +34,12 @@ export async function createMember(req, res) {
     });
 
     return res.status(201).json({
-      message: "Tạo member thành công",
+      message: "Tạo thành viên thành công",
       member,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Lỗi tạo member",
+      message: "Có lỗi xảy ra khi tạo thành viên",
       error: error.message,
     });
   }
@@ -110,7 +110,7 @@ export async function listMembers(req, res) {
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Lỗi lấy danh sách members",
+      message: "Có lỗi xảy ra khi tải danh sách thành viên",
       error: error.message,
     });
   }
@@ -122,7 +122,7 @@ export async function getMemberById(req, res) {
 
     const member = await Member.findById(id);
     if (!member) {
-      return res.status(404).json({ message: "Không tìm thấy member" });
+      return res.status(404).json({ message: "Không tìm thấy thành viên này" });
     }
 
     // Get active packages
@@ -164,7 +164,7 @@ export async function getMemberById(req, res) {
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Lỗi lấy thông tin member",
+      message: "Có lỗi xảy ra khi tải thông tin thành viên",
       error: error.message,
     });
   }
@@ -186,16 +186,16 @@ export async function updateMember(req, res) {
     );
 
     if (!member) {
-      return res.status(404).json({ message: "Không tìm thấy member" });
+      return res.status(404).json({ message: "Không tìm thấy thành viên này" });
     }
 
     return res.json({
-      message: "Cập nhật member thành công",
+      message: "Cập nhật thông tin thành viên thành công",
       member,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Lỗi cập nhật member",
+      message: "Có lỗi xảy ra khi cập nhật thông tin thành viên",
       error: error.message,
     });
   }
@@ -214,23 +214,23 @@ export async function deleteMember(req, res) {
 
     if (activePackages > 0) {
       return res.status(400).json({
-        message: "Không thể xóa member có gói đang hoạt động",
+        message: "Không thể xóa thành viên có gói tập đang hoạt động",
         activePackages,
       });
     }
 
     const member = await Member.findByIdAndDelete(id);
     if (!member) {
-      return res.status(404).json({ message: "Không tìm thấy member" });
+      return res.status(404).json({ message: "Không tìm thấy thành viên này" });
     }
 
     return res.json({
-      message: "Đã xóa member thành công",
+      message: "Xóa thành viên thành công",
       deletedMember: member.fullName,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Lỗi xóa member",
+      message: "Có lỗi xảy ra khi xóa thành viên",
       error: error.message,
     });
   }
@@ -242,7 +242,7 @@ export async function getMemberActivePackages(req, res) {
 
     const member = await Member.findById(id, "fullName email");
     if (!member) {
-      return res.status(404).json({ message: "Không tìm thấy member" });
+      return res.status(404).json({ message: "Không tìm thấy thành viên này" });
     }
 
     const activePackages = await PackageRegistration.find({
@@ -265,7 +265,7 @@ export async function getMemberActivePackages(req, res) {
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Lỗi lấy gói đang hoạt động",
+      message: "Có lỗi xảy ra khi tải danh sách gói tập đang hoạt động",
       error: error.message,
     });
   }

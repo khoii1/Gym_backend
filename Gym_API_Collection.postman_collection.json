@@ -156,6 +156,28 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Resend Verification Email",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/resend-verification",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "resend-verification"]
+            }
+          },
+          "response": []
         }
       ]
     },

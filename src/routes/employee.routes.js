@@ -22,10 +22,10 @@ router.post(
   "/",
   [
     requireRole(ROLES.ADMIN, ROLES.MANAGER),
-    body("fullName").notEmpty().withMessage("Full name is required"),
-    body("email").isEmail().withMessage("Valid email is required"),
-    body("phone").notEmpty().withMessage("Phone is required"),
-    body("position").notEmpty().withMessage("Position is required"),
+    body("fullName").notEmpty().withMessage("Họ tên là bắt buộc"),
+    body("email").isEmail().withMessage("Email hợp lệ là bắt buộc"),
+    body("phone").notEmpty().withMessage("Số điện thoại là bắt buộc"),
+    body("position").notEmpty().withMessage("Vị trí là bắt buộc"),
   ],
   runValidations,
   createEmployee

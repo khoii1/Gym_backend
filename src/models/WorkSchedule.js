@@ -52,7 +52,7 @@ WorkScheduleSchema.pre("validate", function (next) {
     const endMinutes = endHour * 60 + endMin;
 
     if (endMinutes <= startMinutes) {
-      return next(new Error("End time must be after start time"));
+      return next(new Error("Thời gian kết thúc phải sau thời gian bắt đầu"));
     }
   }
   next();

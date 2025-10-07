@@ -5,13 +5,13 @@ export async function createDiscount(req, res) {
     const discount = await Discount.create(req.body);
     return res.status(201).json({
       success: true,
-      message: "Discount created successfully",
+      message: "Tạo khuyến mãi thành công",
       data: discount,
     });
   } catch (error) {
     return res.status(400).json({
       success: false,
-      message: "Failed to create discount",
+      message: "Không thể tạo khuyến mãi. Vui lòng kiểm tra lại thông tin",
       error: error.message,
     });
   }
@@ -46,7 +46,7 @@ export async function listDiscounts(req, res) {
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "Failed to fetch discounts",
+      message: "Có lỗi xảy ra khi tải danh sách khuyến mãi",
       error: error.message,
     });
   }
@@ -62,7 +62,7 @@ export async function getDiscountById(req, res) {
     if (!discount) {
       return res.status(404).json({
         success: false,
-        message: "Discount not found",
+        message: "Không tìm thấy khuyến mãi này",
       });
     }
 
@@ -73,7 +73,7 @@ export async function getDiscountById(req, res) {
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "Failed to fetch discount",
+      message: "Có lỗi xảy ra khi tải thông tin khuyến mãi",
       error: error.message,
     });
   }
@@ -89,19 +89,19 @@ export async function updateDiscount(req, res) {
     if (!discount) {
       return res.status(404).json({
         success: false,
-        message: "Discount not found",
+        message: "Không tìm thấy khuyến mãi này",
       });
     }
 
     return res.json({
       success: true,
-      message: "Discount updated successfully",
+      message: "Cập nhật khuyến mãi thành công",
       data: discount,
     });
   } catch (error) {
     return res.status(400).json({
       success: false,
-      message: "Failed to update discount",
+      message: "Không thể cập nhật khuyến mãi. Vui lòng kiểm tra lại thông tin",
       error: error.message,
     });
   }
@@ -114,18 +114,18 @@ export async function deleteDiscount(req, res) {
     if (!discount) {
       return res.status(404).json({
         success: false,
-        message: "Discount not found",
+        message: "Không tìm thấy khuyến mãi này",
       });
     }
 
     return res.json({
       success: true,
-      message: "Discount deleted successfully",
+      message: "Xóa khuyến mãi thành công",
     });
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "Failed to delete discount",
+      message: "Có lỗi xảy ra khi xóa khuyến mãi",
       error: error.message,
     });
   }
@@ -147,7 +147,7 @@ export async function getActiveDiscounts(req, res) {
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "Failed to fetch active discounts",
+      message: "Có lỗi xảy ra khi tải danh sách khuyến mãi đang hoạt động",
       error: error.message,
     });
   }

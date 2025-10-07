@@ -10,7 +10,7 @@ export async function checkIn(req, res) {
     // 1. Validate member exists
     const member = await Member.findById(memberId);
     if (!member) {
-      return res.status(404).json({ message: "Member không tồn tại" });
+      return res.status(404).json({ message: "Thành viên không tồn tại" });
     }
 
     // 2. Check for active package registration
@@ -23,7 +23,7 @@ export async function checkIn(req, res) {
 
     if (!activeRegistration) {
       return res.status(400).json({
-        message: "Member không có gói tập đang hoạt động",
+        message: "Thành viên không có gói tập đang hoạt động",
         suggestion: "Vui lòng đăng ký gói tập trước khi check-in",
       });
     }
@@ -39,7 +39,7 @@ export async function checkIn(req, res) {
 
     if (existingCheckin) {
       return res.status(400).json({
-        message: "Member đã check-in rồi",
+        message: "Thành viên đã check-in rồi",
         checkinTime: existingCheckin.checkin_time,
         suggestion: "Hãy check-out trước khi check-in lại",
       });
@@ -83,7 +83,7 @@ export async function checkIn(req, res) {
       },
     });
   } catch (error) {
-    console.error("Check-in error:", error);
+    console.error("Lỗi check-in:", error);
     return res.status(500).json({
       message: "Lỗi check-in",
       error: error.message,
@@ -107,8 +107,8 @@ export async function checkOut(req, res) {
 
     if (!activeCheckin) {
       return res.status(400).json({
-        message: "Không tìm thấy check-in active",
-        suggestion: "Member chưa check-in hoặc đã check-out rồi",
+        message: "Không tìm thấy check-in đang hoạt động",
+        suggestion: "Thành viên chưa check-in hoặc đã check-out rồi",
       });
     }
 
@@ -139,7 +139,7 @@ export async function checkOut(req, res) {
       },
     });
   } catch (error) {
-    console.error("Check-out error:", error);
+    console.error("Lỗi check-out:", error);
     return res.status(500).json({
       message: "Lỗi check-out",
       error: error.message,

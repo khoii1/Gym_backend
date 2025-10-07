@@ -5,13 +5,13 @@ export async function createEmployee(req, res) {
     const employee = await Employee.create(req.body);
     return res.status(201).json({
       success: true,
-      message: "Employee created successfully",
+      message: "Tạo nhân viên thành công",
       data: employee,
     });
   } catch (error) {
     return res.status(400).json({
       success: false,
-      message: "Failed to create employee",
+      message: "Không thể tạo nhân viên. Vui lòng kiểm tra lại thông tin",
       error: error.message,
     });
   }
@@ -60,7 +60,7 @@ export async function listEmployees(req, res) {
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "Failed to fetch employees",
+      message: "Có lỗi xảy ra khi tải danh sách nhân viên",
       error: error.message,
     });
   }
@@ -73,7 +73,7 @@ export async function getEmployee(req, res) {
     if (!employee) {
       return res.status(404).json({
         success: false,
-        message: "Employee not found",
+        message: "Không tìm thấy nhân viên này",
       });
     }
 
@@ -84,7 +84,7 @@ export async function getEmployee(req, res) {
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "Failed to fetch employee",
+      message: "Có lỗi xảy ra khi tải thông tin nhân viên",
       error: error.message,
     });
   }
@@ -100,19 +100,19 @@ export async function updateEmployee(req, res) {
     if (!employee) {
       return res.status(404).json({
         success: false,
-        message: "Employee not found",
+        message: "Không tìm thấy nhân viên này",
       });
     }
 
     return res.json({
       success: true,
-      message: "Employee updated successfully",
+      message: "Cập nhật thông tin nhân viên thành công",
       data: employee,
     });
   } catch (error) {
     return res.status(400).json({
       success: false,
-      message: "Failed to update employee",
+      message: "Không thể cập nhật thông tin nhân viên. Vui lòng kiểm tra lại",
       error: error.message,
     });
   }
@@ -125,18 +125,18 @@ export async function deleteEmployee(req, res) {
     if (!employee) {
       return res.status(404).json({
         success: false,
-        message: "Employee not found",
+        message: "Không tìm thấy nhân viên này",
       });
     }
 
     return res.json({
       success: true,
-      message: "Employee deleted successfully",
+      message: "Xóa nhân viên thành công",
     });
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "Failed to delete employee",
+      message: "Có lỗi xảy ra khi xóa nhân viên",
       error: error.message,
     });
   }

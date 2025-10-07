@@ -16,13 +16,13 @@ export async function createRegistration(req, res) {
     // 1. Validate member exists
     const member = await Member.findById(memberId);
     if (!member) {
-      return res.status(404).json({ message: "Member không tồn tại" });
+      return res.status(404).json({ message: "Không tìm thấy thành viên này" });
     }
 
     // 2. Validate package exists and is active
     const packageData = await Package.findById(packageId);
     if (!packageData) {
-      return res.status(404).json({ message: "Package không tồn tại" });
+      return res.status(404).json({ message: "Không tìm thấy gói tập này" });
     }
 
     // 3. Check for existing active registration
@@ -33,7 +33,7 @@ export async function createRegistration(req, res) {
 
     if (existingRegistration) {
       return res.status(400).json({
-        message: "Member đã có gói đang hoạt động",
+        message: "Thành viên đã có gói tập đang hoạt động",
         activePackage: existingRegistration,
       });
     }
@@ -131,10 +131,7 @@ export async function createRegistration(req, res) {
         `,
       });
     } catch (emailError) {
-      console.error(
-        "Failed to send registration confirmation email:",
-        emailError
-      );
+      console.error("Gửi email xác nhận đăng ký thất bại:", emailError);
     }
 
     return res.status(201).json({
@@ -153,9 +150,9 @@ export async function createRegistration(req, res) {
       },
     });
   } catch (error) {
-    console.error("Registration creation error:", error);
+    console.error("Lỗi tạo đăng ký:", error);
     return res.status(500).json({
-      message: "Lỗi tạo đăng ký",
+      message: "Có lỗi xảy ra khi đăng ký gói tập",
       error: error.message,
     });
   }
@@ -190,7 +187,7 @@ export async function listRegistrations(req, res) {
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Lỗi lấy danh sách đăng ký",
+      message: "Có lỗi xảy ra khi tải danh sách đăng ký",
       error: error.message,
     });
   }
@@ -206,13 +203,13 @@ export async function getRegistrationById(req, res) {
       .populate("discount_id", "name type value");
 
     if (!registration) {
-      return res.status(404).json({ message: "Không tìm thấy đăng ký" });
+      return res.status(404).json({ message: "Không tìm thấy đăng ký này" });
     }
 
     return res.json(registration);
   } catch (error) {
     return res.status(500).json({
-      message: "Lỗi lấy thông tin đăng ký",
+      message: "Có lỗi xảy ra khi tải thông tin đăng ký",
       error: error.message,
     });
   }
@@ -226,7 +223,7 @@ export async function updateRegistrationStatus(req, res) {
     const validStatuses = ["active", "suspended", "cancelled", "expired"];
     if (!validStatuses.includes(status)) {
       return res.status(400).json({
-        message: "Status không hợp lệ",
+        message: "Trạng thái không hợp lệ",
         validStatuses,
       });
     }
@@ -242,7 +239,7 @@ export async function updateRegistrationStatus(req, res) {
     ).populate("member_id", "fullName email");
 
     if (!registration) {
-      return res.status(404).json({ message: "Không tìm thấy đăng ký" });
+      return res.status(404).json({ message: "Không tìm thấy đăng ký này" });
     }
 
     return res.json({
@@ -251,7 +248,7 @@ export async function updateRegistrationStatus(req, res) {
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Lỗi cập nhật trạng thái",
+      message: "Có lỗi xảy ra khi cập nhật trạng thái",
       error: error.message,
     });
   }
@@ -277,7 +274,7 @@ export async function getMemberActivePackages(req, res) {
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Lỗi lấy gói đang hoạt động",
+      message: "Có lỗi xảy ra khi tải danh sách gói tập đang hoạt động",
       error: error.message,
     });
   }

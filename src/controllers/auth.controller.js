@@ -83,6 +83,15 @@ export async function login(req, res) {
   const ok = await user.comparePassword(password);
   if (!ok) return res.status(401).json({ message: "Sai thông tin đăng nhập" });
 
+  // Kiểm tra email đã được xác minh chưa
+  if (!user.isEmailVerified) {
+    return res.status(403).json({
+      message: "Vui lòng xác minh email trước khi đăng nhập",
+      code: "EMAIL_NOT_VERIFIED",
+      email: user.email,
+    });
+  }
+
   const tokens = signTokens(user);
   return res.json({
     user: {
@@ -162,4 +171,52 @@ export async function resetPassword(req, res) {
   await user.save();
 
   return res.json({ message: "Đổi mật khẩu thành công" });
+}
+
+export async function resendVerification(req, res) {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ message: "Email là bắt buộc" });
+  }
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(404).json({ message: "Không tìm thấy người dùng" });
+  }
+
+  if (user.isEmailVerified) {
+    return res.status(400).json({ message: "Email đã được xác minh" });
+  }
+
+  // Xóa code cũ nếu có
+  user.codes = user.codes.filter((c) => c.purpose !== "verify");
+
+  // Tạo code mới
+  const code = Math.random().toString().slice(2, 8);
+  user.codes.push({
+    code,
+    purpose: "verify",
+    expiresAt: new Date(Date.now() + 10 * 60 * 1000), // 10 phút
+  });
+
+  await user.save();
+
+  // Gửi email
+  try {
+    await sendMail({
+      to: user.email,
+      subject: "Xác minh email",
+      html: `<p>Xin chào ${user.fullName},</p><p>Mã xác minh của bạn là <b>${code}</b> (hết hạn sau 10 phút).</p>`,
+    });
+    return res.json({
+      message: "Đã gửi lại email xác minh",
+      email: user.email,
+    });
+  } catch (error) {
+    console.error("Lỗi gửi email xác minh:", error);
+    return res.status(500).json({
+      message: "Không thể gửi email xác minh",
+    });
+  }
 }

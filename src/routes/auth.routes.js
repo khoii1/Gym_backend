@@ -8,6 +8,7 @@ import {
   refreshToken,
   forgotPassword,
   resetPassword,
+  resendVerification,
 } from "../controllers/auth.controller.js";
 
 const router = Router();
@@ -60,6 +61,13 @@ router.post(
   ],
   runValidations,
   resetPassword
+);
+
+router.post(
+  "/resend-verification",
+  [body("email").isEmail()],
+  runValidations,
+  resendVerification
 );
 
 export default router;
