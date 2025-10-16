@@ -66,7 +66,7 @@ const EmployeeSchema = new mongoose.Schema(
 );
 
 // Indexes for better performance
-EmployeeSchema.index({ email: 1 });
+// Note: email index is automatically created due to unique: true
 EmployeeSchema.index({ position: 1 });
 EmployeeSchema.index({ status: 1 });
 EmployeeSchema.index({ fullName: "text", email: "text" });

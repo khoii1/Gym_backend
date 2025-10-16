@@ -1,8 +1,27 @@
-import Employee from "../models/Employee.js";
+import { EmployeeService } from "../services/employee.service.js";
 
 export async function createEmployee(req, res) {
   try {
-    const employee = await Employee.create(req.body);
+    // Validate dữ liệu
+    const validationErrors = EmployeeService.validateEmployeeData(req.body);
+    if (validationErrors.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Dữ liệu không hợp lệ",
+        errors: validationErrors,
+      });
+    }
+
+    // Kiểm tra email đã tồn tại
+    const emailExists = await EmployeeService.checkEmailExists(req.body.email);
+    if (emailExists) {
+      return res.status(409).json({
+        success: false,
+        message: "Email đã được sử dụng bởi nhân viên khác",
+      });
+    }
+
+    const employee = await EmployeeService.createEmployee(req.body);
     return res.status(201).json({
       success: true,
       message: "Tạo nhân viên thành công",
@@ -28,35 +47,16 @@ export async function listEmployees(req, res) {
       page = 1,
     } = req.query;
 
-    const filter = {};
-    if (position) filter.position = position;
-    if (department) filter.department = department;
-    if (status) filter.status = status;
-    if (search) {
-      filter.$or = [
-        { fullName: { $regex: search, $options: "i" } },
-        { email: { $regex: search, $options: "i" } },
-        { position: { $regex: search, $options: "i" } },
-      ];
-    }
-
-    const employees = await Employee.find(filter)
-      .limit(Number(limit))
-      .skip((Number(page) - 1) * Number(limit))
-      .sort({ createdAt: -1 });
-
-    const total = await Employee.countDocuments(filter);
-
-    return res.json({
-      success: true,
-      data: employees,
-      pagination: {
-        currentPage: Number(page),
-        totalPages: Math.ceil(total / Number(limit)),
-        totalItems: total,
-        itemsPerPage: Number(limit),
-      },
+    const result = await EmployeeService.getEmployeesWithFilters({
+      position,
+      department,
+      status,
+      search,
+      limit,
+      page,
     });
+
+    return res.json(result);
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -68,20 +68,20 @@ export async function listEmployees(req, res) {
 
 export async function getEmployee(req, res) {
   try {
-    const employee = await Employee.findById(req.params.id);
-
-    if (!employee) {
-      return res.status(404).json({
-        success: false,
-        message: "Không tìm thấy nhân viên này",
-      });
-    }
+    const employee = await EmployeeService.getEmployeeById(req.params.id);
 
     return res.json({
       success: true,
       data: employee,
     });
   } catch (error) {
+    if (error.message === "Không tìm thấy nhân viên này") {
+      return res.status(404).json({
+        success: false,
+        message: error.message,
+      });
+    }
+
     return res.status(500).json({
       success: false,
       message: "Có lỗi xảy ra khi tải thông tin nhân viên",
@@ -92,17 +92,10 @@ export async function getEmployee(req, res) {
 
 export async function updateEmployee(req, res) {
   try {
-    const employee = await Employee.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
-
-    if (!employee) {
-      return res.status(404).json({
-        success: false,
-        message: "Không tìm thấy nhân viên này",
-      });
-    }
+    const employee = await EmployeeService.updateEmployee(
+      req.params.id,
+      req.body
+    );
 
     return res.json({
       success: true,
@@ -110,6 +103,16 @@ export async function updateEmployee(req, res) {
       data: employee,
     });
   } catch (error) {
+    if (
+      error.message === "Không tìm thấy nhân viên này" ||
+      error.message === "Email này đã được sử dụng"
+    ) {
+      return res.status(404).json({
+        success: false,
+        message: error.message,
+      });
+    }
+
     return res.status(400).json({
       success: false,
       message: "Không thể cập nhật thông tin nhân viên. Vui lòng kiểm tra lại",
@@ -120,23 +123,105 @@ export async function updateEmployee(req, res) {
 
 export async function deleteEmployee(req, res) {
   try {
-    const employee = await Employee.findByIdAndDelete(req.params.id);
+    const result = await EmployeeService.deleteEmployee(req.params.id);
 
-    if (!employee) {
+    return res.json(result);
+  } catch (error) {
+    if (error.message === "Không tìm thấy nhân viên này") {
       return res.status(404).json({
         success: false,
-        message: "Không tìm thấy nhân viên này",
+        message: error.message,
       });
     }
 
+    return res.status(500).json({
+      success: false,
+      message: "Có lỗi xảy ra khi xóa nhân viên",
+      error: error.message,
+    });
+  }
+}
+
+// New enhanced controller methods using EmployeeService features
+export async function getEmployeeStatistics(req, res) {
+  try {
+    const statistics = await EmployeeService.getEmployeeStatistics();
+
     return res.json({
       success: true,
-      message: "Xóa nhân viên thành công",
+      data: statistics,
     });
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "Có lỗi xảy ra khi xóa nhân viên",
+      message: "Có lỗi xảy ra khi tải thống kê nhân viên",
+      error: error.message,
+    });
+  }
+}
+
+export async function searchEmployees(req, res) {
+  try {
+    const { query, limit = 10 } = req.query;
+
+    if (!query) {
+      return res.status(400).json({
+        success: false,
+        message: "Vui lòng nhập từ khóa tìm kiếm",
+      });
+    }
+
+    const employees = await EmployeeService.searchEmployees(
+      query,
+      parseInt(limit)
+    );
+
+    return res.json({
+      success: true,
+      data: employees,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Có lỗi xảy ra khi tìm kiếm nhân viên",
+      error: error.message,
+    });
+  }
+}
+
+export async function getEmployeesByDepartment(req, res) {
+  try {
+    const { department } = req.params;
+    const employees = await EmployeeService.getEmployeesByDepartment(
+      department
+    );
+
+    return res.json({
+      success: true,
+      data: employees,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Có lỗi xảy ra khi tải danh sách nhân viên theo phòng ban",
+      error: error.message,
+    });
+  }
+}
+
+export async function getEmployeesByPosition(req, res) {
+  try {
+    const { position } = req.params;
+    const employees = await EmployeeService.getEmployeesByPosition(position);
+
+    return res.json({
+      success: true,
+      data: employees,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Có lỗi xảy ra khi tải danh sách nhân viên theo chức vụ",
       error: error.message,
     });
   }

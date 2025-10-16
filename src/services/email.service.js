@@ -1,4 +1,3 @@
-import { transporter } from "../config/mailer.js";
 import sgMail from "@sendgrid/mail";
 
 const USE_SENDGRID = Boolean(process.env.SENDGRID_API_KEY);
@@ -20,22 +19,16 @@ export async function sendMail({ to, subject, html }) {
   const fromEmail = process.env.MAIL_FROM || process.env.MAIL_USER;
   const appName = process.env.APP_NAME || "App";
 
-  if (USE_SENDGRID && process.env.SENDGRID_API_KEY) {
-    const msg = {
-      to,
-      from: { email: fromEmail, name: appName },
-      subject,
-      html,
-    };
-    const [response] = await sgMail.send(msg);
-    return response;
+  if (!USE_SENDGRID || !process.env.SENDGRID_API_KEY) {
+    throw new Error("SendGrid API key chưa được cấu hình");
   }
 
-  const info = await transporter.sendMail({
-    from: `${appName} <${fromEmail}>`,
+  const msg = {
     to,
+    from: { email: fromEmail, name: appName },
     subject,
     html,
-  });
-  return info;
+  };
+  const [response] = await sgMail.send(msg);
+  return response;
 }

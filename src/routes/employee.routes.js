@@ -10,6 +10,10 @@ import {
   getEmployee,
   updateEmployee,
   deleteEmployee,
+  getEmployeeStatistics,
+  searchEmployees,
+  getEmployeesByDepartment,
+  getEmployeesByPosition,
 } from "../controllers/employee.controller.js";
 
 const router = Router();
@@ -17,6 +21,31 @@ const router = Router();
 router.use(auth(true));
 
 router.get("/", requireRole(ROLES.ADMIN, ROLES.MANAGER), listEmployees);
+
+// New enhanced routes - must come before /:id route
+router.get(
+  "/statistics/overview",
+  requireRole(ROLES.ADMIN, ROLES.MANAGER),
+  getEmployeeStatistics
+);
+
+router.get(
+  "/search/query",
+  requireRole(ROLES.ADMIN, ROLES.MANAGER),
+  searchEmployees
+);
+
+router.get(
+  "/department/:department",
+  requireRole(ROLES.ADMIN, ROLES.MANAGER),
+  getEmployeesByDepartment
+);
+
+router.get(
+  "/position/:position",
+  requireRole(ROLES.ADMIN, ROLES.MANAGER),
+  getEmployeesByPosition
+);
 
 router.post(
   "/",
